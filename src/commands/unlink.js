@@ -1,0 +1,4 @@
+import { SlashCommandBuilder } from "discord.js";
+import { getVerified, removeVerified } from "../services/verificationStore.js";
+export const data=new SlashCommandBuilder().setName("unlink").setDescription("Unlink your ShrekBook account.");
+export async function execute(interaction){if(!getVerified(interaction.user.id))return interaction.reply({content:"❌ You do not have a linked ShrekBook account.",ephemeral:true});removeVerified(interaction.user.id);try{const role=interaction.guild.roles.cache.get(process.env.SHREKBOOK_ROLE_ID);if(role&&interaction.member.roles.cache.has(role.id))await interaction.member.roles.remove(role,"ShrekBook account unlinked");}catch(e){console.error("Could not remove role:",e);}await interaction.reply({content:"✅ Your ShrekBook account has been unlinked and the role was removed.",ephemeral:true});}
